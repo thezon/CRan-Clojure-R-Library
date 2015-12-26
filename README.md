@@ -1,5 +1,5 @@
-# CRan-Clojure-R-Library
-CRAN Clojur-R integration library
+# CRan-Clojure-R-Library 
+CRAN Clojur-R integration library  version 0.0.1
 
 This is a future library for CRAN developement enviroment.
 
