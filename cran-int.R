@@ -28,6 +28,31 @@ callService <- function(clojureCode){
 	return(rin)
 }
 
+clojHelp <-function (command){
+	print("use #(<ops> <parms>) to submit command into clojure ")
+	print("use use # as escape for # thus ##(<ops> <parms>) is #(<ops> <parms>")
+	print("All keywords must have ' prefix  (def 'a 3)")
+	print("")
+
+}
+
+expEval <-function (rcode,verbose){
+
+	result<-tryCatch({
+					print(eval(parse(text=rcode)))
+					return("R evaluation success")}
+				, warn = function(w){
+					return("R evaluation warning.")}
+				, error = function(e){
+					print("R evaluation error: Command did not exicute.")
+					return("R evaluation error: Command did not exicute.")})
+					
+		if(verbose == "debug"){
+			print(result)
+		}
+			
+}
+
 clojure <- function (x, sessionType=c("user","debug")){
 	
 	verbose <- match.arg(sessionType);
@@ -39,9 +64,20 @@ clojure <- function (x, sessionType=c("user","debug")){
 	repeat{
 		clojureCode <- readline(prompt="clj> ")
 		
-		if(clojureCode == "end" || clojureCode == "exit"){
+		if(tolower(clojureCode) == "end" 
+			|| tolower(clojureCode) == "exit"){
 				 break;
 			}
+		if(tolower(clojureCode)=="help"){
+			clojHelp()
+			next
+		}
+		
+		if(nchar(clojureCode)==0){
+			print("Please Enter an Expression.")
+			next;
+			}
+			
 		if(verbose == "debug"){
 			print(paste("User Entered:", clojureCode))
 		}
@@ -57,7 +93,7 @@ clojure <- function (x, sessionType=c("user","debug")){
 					print(rin,max=1000)
 				}
 				else{
-					print(eval(parse(text=rin)))
+					expEval(rin,verbose)
 				}
 			}
 		}
